@@ -1,6 +1,6 @@
-const MODEL = "gemini-2.0-flash";
-const API_URL = (key) =>
-  `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${key}`;
+const DEFAULT_MODEL = "gemini-2.5-flash";
+const API_URL = (model, key) =>
+  `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
 
 const chatWindow = document.getElementById("chatWindow");
 const chatForm = document.getElementById("chatForm");
@@ -9,6 +9,7 @@ const sendBtn = document.getElementById("sendBtn");
 const settingsBtn = document.getElementById("settingsBtn");
 const settingsPanel = document.getElementById("settingsPanel");
 const apiKeyInput = document.getElementById("apiKeyInput");
+const modelSelect = document.getElementById("modelSelect");
 const saveKeyBtn = document.getElementById("saveKeyBtn");
 
 const history = [];
@@ -19,6 +20,14 @@ function getApiKey() {
 
 function setApiKey(key) {
   localStorage.setItem("gemini_api_key", key);
+}
+
+function getModel() {
+  return localStorage.getItem("gemini_model") || DEFAULT_MODEL;
+}
+
+function setModel(model) {
+  localStorage.setItem("gemini_model", model);
 }
 
 function addMessage(role, text) {
@@ -33,14 +42,16 @@ function addMessage(role, text) {
 settingsBtn.addEventListener("click", () => {
   settingsPanel.classList.toggle("hidden");
   apiKeyInput.value = getApiKey();
+  modelSelect.value = getModel();
 });
 
 saveKeyBtn.addEventListener("click", () => {
   const key = apiKeyInput.value.trim();
   if (key) {
     setApiKey(key);
-    settingsPanel.classList.add("hidden");
   }
+  setModel(modelSelect.value);
+  settingsPanel.classList.add("hidden");
 });
 
 userInput.addEventListener("input", () => {
@@ -76,7 +87,7 @@ chatForm.addEventListener("submit", async (e) => {
   const thinkingEl = addMessage("bot", "생각 중...");
 
   try {
-    const res = await fetch(API_URL(apiKey), {
+    const res = await fetch(API_URL(getModel(), apiKey), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ contents: history }),
