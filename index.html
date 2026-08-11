@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Gemini 챗봇</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <h1>Gemini 챗봇</h1>
+      <button id="settingsBtn" title="API 키 설정">⚙️</button>
+    </header>
+
+    <div id="settingsPanel" class="settings-panel hidden">
+      <label for="apiKeyInput">Gemini API 키</label>
+      <input type="password" id="apiKeyInput" placeholder="AIza..." />
+      <button id="saveKeyBtn">저장</button>
+      <p class="hint">키는 이 브라우저의 로컬 저장소에만 저장되며 서버로 전송되지 않습니다.</p>
+    </div>
+
+    <main id="chatWindow" class="chat-window"></main>
+
+    <form id="chatForm" class="chat-form">
+      <textarea id="userInput" placeholder="메시지를 입력하세요..." rows="1" required></textarea>
+      <button type="submit" id="sendBtn">보내기</button>
+    </form>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
